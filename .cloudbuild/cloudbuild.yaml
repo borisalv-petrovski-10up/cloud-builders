@@ -1,0 +1,33 @@
+options:
+  machineType: 'E2_HIGHCPU_8'
+  env:
+    - "GOPATH=/go"
+  volumes:
+    - name: go-modules-pkg
+      path: /go/pkg
+    - name: go-modules-bin
+      path: /go/bin
+    - name: go-modules-src
+      path: /go/src
+substitutions:
+  _BUILDERS_TAG: gcr.io/${PROJECT_ID}/cloud-builders
+  _CI_IMAGE_SIGNER: ci-image-signer
+steps:
+- id: build_ci_image_signer
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: '/bin/bash'
+  args:
+    - '-ce'
+    - |
+      docker build -t=${_BUILDERS_TAG}/${_CI_IMAGE_SIGNER} -f ${_CI_IMAGE_SIGNER}/Dockerfile ${_CI_IMAGE_SIGNER}
+
+- id: push_ci_image_signer
+  name: 'gcr.io/cloud-builders/docker'
+  entrypoint: '/bin/bash'
+  args:
+    - -ce
+    - |
+      docker push ${_BUILDERS_TAG}/${_CI_IMAGE_SIGNER}
+
+timeout: 1200s
+tags: ['custom-cloud-builders']
