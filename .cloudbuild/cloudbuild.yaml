@@ -2,7 +2,6 @@ options:
   machineType: 'E2_HIGHCPU_8'
   env:
     - "GOPATH=/go"
-    - "PROJECT_ID=${PROJECT_ID}"
   volumes:
     - name: go-modules-pkg
       path: /go/pkg
@@ -20,7 +19,7 @@ steps:
   args:
     - '-ce'
     - |
-      docker build -t=${_BUILDERS_TAG}/${_CI_IMAGE_SIGNER} -f ${_CI_IMAGE_SIGNER}/Dockerfile ${_CI_IMAGE_SIGNER}
+      docker build --build-arg PROJECT_ID=${PROJECT_ID} -t=${_BUILDERS_TAG}/${_CI_IMAGE_SIGNER} -f ${_CI_IMAGE_SIGNER}/Dockerfile ${_CI_IMAGE_SIGNER}
 
 - id: push_ci_image_signer
   name: 'gcr.io/cloud-builders/docker'
