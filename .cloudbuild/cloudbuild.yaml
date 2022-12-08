@@ -2,6 +2,7 @@ options:
   machineType: 'E2_HIGHCPU_8'
   env:
     - "GOPATH=/go"
+    - "PROJECT_ID=${PROJECT_ID}"
   volumes:
     - name: go-modules-pkg
       path: /go/pkg
