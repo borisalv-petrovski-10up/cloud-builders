@@ -1,4 +1,4 @@
-FROM gcr.io/cloud-builders/go:debian-1.19
+FROM gcr.io/cloud-builders/go:debian-1.18
 
 ARG CODECOV_VERSION=latest
 RUN curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import # One-time step
