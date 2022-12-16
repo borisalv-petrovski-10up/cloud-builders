@@ -12,22 +12,39 @@ options:
 substitutions:
   _BUILDERS_TAG: gcr.io/${PROJECT_ID}/cloud-builders
   _CI_IMAGE_SIGNER: ci-image-signer
+  _TESTS_WITH_CODECOV: tests-with-codecov
 steps:
-- id: build_ci_image_signer
-  name: 'gcr.io/cloud-builders/docker'
-  entrypoint: '/bin/bash'
-  args:
-    - '-ce'
-    - |
-      docker build --build-arg PROJECT_ID=${PROJECT_ID} -t=${_BUILDERS_TAG}/${_CI_IMAGE_SIGNER} -f ${_CI_IMAGE_SIGNER}/Dockerfile ${_CI_IMAGE_SIGNER}
+  - id: build_ci_image_signer
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: '/bin/bash'
+    args:
+      - -ce
+      - |
+        docker build --build-arg PROJECT_ID=${PROJECT_ID} -t=${_BUILDERS_TAG}/${_CI_IMAGE_SIGNER} -f ${_CI_IMAGE_SIGNER}/Dockerfile ${_CI_IMAGE_SIGNER}
 
-- id: push_ci_image_signer
-  name: 'gcr.io/cloud-builders/docker'
-  entrypoint: '/bin/bash'
-  args:
-    - -ce
-    - |
-      docker push ${_BUILDERS_TAG}/${_CI_IMAGE_SIGNER}
+  - id: push_ci_image_signer
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: '/bin/bash'
+    args:
+      - -ce
+      - |
+        docker push ${_BUILDERS_TAG}/${_CI_IMAGE_SIGNER}
+
+  - id: build_tests_with_codecov
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: '/bin/bash'
+    args:
+      - -ce
+      - |
+        docker build --build-arg GITHUB_SSH_KEY --build-arg PROJECT_ID=${PROJECT_ID} -t=${_BUILDERS_TAG}/${_TESTS_WITH_CODECOV} -f ${_TESTS_WITH_CODECOV}/Dockerfile ${_TESTS_WITH_CODECOV}
+
+  - id: push_tests_with_codecov
+    name: 'gcr.io/cloud-builders/docker'
+    entrypoint: '/bin/bash'
+    args:
+      - -ce
+      - |
+        docker push ${_BUILDERS_TAG}/${_TESTS_WITH_CODECOV}
 
 timeout: 1200s
 tags: ['custom-cloud-builders']
