@@ -17,4 +17,4 @@ RUN chmod +rwx -R /scripts
 # Setup go for shared folders (do not depend on local install)
 ENV GOPATH=/go
 
-CMD ["/scripts/execute-unit-tests.sh"]
+ENTRYPOINT ["/scripts/execute-unit-tests.sh"]
